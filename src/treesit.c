@@ -38,7 +38,7 @@ along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.  */
 #if TREE_SITTER_LANGUAGE_VERSION >= 15
 #undef ts_language_abi_version
 #else
-#undef ts_language_version
+#undef ts_language_abi_version
 #endif
 #undef ts_node_child
 #undef ts_node_child_by_field_name
@@ -101,7 +101,7 @@ along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.  */
 #if TREE_SITTER_LANGUAGE_VERSION >= 15
 DEF_DLL_FN (uint32_t, ts_language_abi_version, (const TSLanguage *));
 #else
-DEF_DLL_FN (uint32_t, ts_language_version, (const TSLanguage *));
+DEF_DLL_FN (uint32_t, ts_language_abi_version, (const TSLanguage *));
 #endif
 DEF_DLL_FN (TSNode, ts_node_child, (TSNode, uint32_t));
 DEF_DLL_FN (TSNode, ts_node_child_by_field_name,
@@ -186,7 +186,7 @@ init_treesit_functions (void)
 #if TREE_SITTER_LANGUAGE_VERSION >= 15
   LOAD_DLL_FN (library, ts_language_abi_version);
 #else
-  LOAD_DLL_FN (library, ts_language_version);
+  LOAD_DLL_FN (library, ts_language_abi_version);
 #endif
   LOAD_DLL_FN (library, ts_node_child);
   LOAD_DLL_FN (library, ts_node_child_by_field_name);
@@ -252,7 +252,7 @@ init_treesit_functions (void)
 #if TREE_SITTER_LANGUAGE_VERSION >= 15
 #define ts_language_abi_version fn_ts_language_abi_version
 #else
-#define ts_language_version fn_ts_language_version
+#define ts_language_abi_version fn_ts_language_abi_version
 #endif
 #define ts_node_child fn_ts_node_child
 #define ts_node_child_by_field_name fn_ts_node_child_by_field_name
@@ -738,8 +738,8 @@ treesit_load_language_push_for_each_suffix (Lisp_Object lib_base_name,
 }
 
 /* This function is a compatibility shim.  Tree-sitter 0.25 introduced
-   ts_language_abi_version as a replacement for ts_language_version, and
-   tree-sitter 0.26 removed ts_language_version.  Here we use the fact
+   ts_language_abi_version as a replacement for ts_language_abi_version, and
+   tree-sitter 0.26 removed ts_language_abi_version.  Here we use the fact
    that 0.25 bumped TREE_SITTER_LANGUAGE_VERSION to 15, to use the new
    function instead of the old one, when Emacs is compiled against
    tree-sitter version 0.25 or newer.  */
@@ -749,7 +749,7 @@ treesit_language_abi_version (const TSLanguage *ts_lang)
 #if TREE_SITTER_LANGUAGE_VERSION >= 15
   return ts_language_abi_version (ts_lang);
 #else
-  return ts_language_version (ts_lang);
+  return ts_language_abi_version (ts_lang);
 #endif
 }
 
